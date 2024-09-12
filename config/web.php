@@ -17,6 +17,19 @@ $config = [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ],
+            'enableCsrfValidation' => false, // Disable CSRF for API requests
+        ],
+        'response' => [
+            'class' => 'yii\web\Response',
+            'format' => yii\web\Response::FORMAT_JSON,
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                $response->headers->set('Access-Control-Allow-Origin', '*'); // Sau 'http://localhost'
+                $response->headers->set('Access-Control-Allow-Credentials', 'false');
+                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+                $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
+                $response->headers->set('Vary', 'Origin');
+            },
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -46,31 +59,36 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
-                'GET api-cities' => 'api-city/index',
+                'GET,OPTIONS api-cities' => 'api-city/index', // Adaugă OPTIONS la reguli
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'api-city'],
             ],
-        ],
-        'cors' => [
-            'Origin' => ['*'], // Sau domeniul tău specific
-            'Access-Control-Allow-Credentials' => false,
-            'Access-Control-Request-Method' => ['GET', 'POST', 'OPTIONS'],
-            'Access-Control-Allow-Headers' => ['*'],
         ],
     ],
     'params' => $params,
+    'as corsFilter' => [
+        'class' => \yii\filters\Cors::class,
+        'cors' => [
+            'Origin' => ['*'], // Adaugă localhost și IP local
+            'Access-Control-Allow-Credentials' => false,
+            'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+            'Access-Control-Allow-Headers' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 
