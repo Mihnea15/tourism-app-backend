@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS `business` (
+`id` INT AUTO_INCREMENT PRIMARY KEY,
+`city_id` INT NOT NULL,
+`name` VARCHAR(255) NOT NULL,
+`latitude` DECIMAL(9,6) NOT NULL,
+`longitude` DECIMAL(9,6) NOT NULL,
+`logo` VARCHAR(255),
+`google_page_link` VARCHAR(255)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
