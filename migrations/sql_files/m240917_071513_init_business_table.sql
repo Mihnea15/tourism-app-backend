@@ -4,6 +4,9 @@ CREATE TABLE IF NOT EXISTS `business` (
 `name` VARCHAR(255) NOT NULL,
 `latitude` DECIMAL(9,6) NOT NULL,
 `longitude` DECIMAL(9,6) NOT NULL,
-`logo` VARCHAR(255),
-`google_page_link` VARCHAR(255)
+`logo` VARCHAR(255) NOT NULL,
+`google_page_link` VARCHAR(255) NOT NULL,
+`address` VARCHAR(255) NOT NULL,
+`email` VARCHAR(255) NOT NULL,
+`phone` VARCHAR(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
