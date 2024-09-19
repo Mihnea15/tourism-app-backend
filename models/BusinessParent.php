@@ -17,6 +17,12 @@ use Yii;
  * @property string $address
  * @property string $email
  * @property string $phone
+ * @property string|null $reviews
+ * @property int $favourite
+ * @property string|null $description
+ * @property string|null $program
+ * @property string|null $opening_hour
+ * @property string|null $closing_hour
  */
 class BusinessParent extends \yii\db\ActiveRecord
 {
@@ -35,9 +41,11 @@ class BusinessParent extends \yii\db\ActiveRecord
     {
         return [
             [['city_id', 'name', 'latitude', 'longitude', 'logo', 'google_page_link', 'address', 'email', 'phone'], 'required'],
-            [['city_id'], 'integer'],
+            [['city_id', 'favourite'], 'integer'],
             [['latitude', 'longitude'], 'number'],
-            [['name', 'logo', 'google_page_link', 'address', 'email', 'phone'], 'string', 'max' => 255],
+            [['description'], 'string'],
+            [['opening_hour', 'closing_hour'], 'safe'],
+            [['name', 'logo', 'google_page_link', 'address', 'email', 'phone', 'reviews', 'program'], 'string', 'max' => 255],
         ];
     }
 
@@ -57,6 +65,12 @@ class BusinessParent extends \yii\db\ActiveRecord
             'address' => 'Address',
             'email' => 'Email',
             'phone' => 'Phone',
+            'reviews' => 'Reviews',
+            'favourite' => 'Favourite',
+            'description' => 'Description',
+            'program' => 'Program',
+            'opening_hour' => 'Opening Hour',
+            'closing_hour' => 'Closing Hour',
         ];
     }
 }

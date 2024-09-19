@@ -9,4 +9,7 @@ CREATE TABLE IF NOT EXISTS `business` (
 `address` VARCHAR(255) NOT NULL,
 `email` VARCHAR(255) NOT NULL,
 `phone` VARCHAR(255) NOT NULL
+`reviews` VARCHAR(255) NULL,
+`favourite` TINYINT NOT NULL DEFAULT '0',
+`description` LONGTEXT NOT NULL,
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
