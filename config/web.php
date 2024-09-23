@@ -61,8 +61,7 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                'GET,OPTIONS api-cities' => 'api-city/index', // Adaugă OPTIONS la reguli
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'api-city'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['api-city', 'api-business']],
             ],
         ],
     ],

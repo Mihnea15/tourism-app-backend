@@ -13,7 +13,7 @@ use Yii;
  * @property float $latitude
  * @property float $longitude
  * @property string $logo
- * @property string $google_page_link
+ * @property string $google_page_url
  * @property string $address
  * @property string $email
  * @property string $phone
@@ -40,12 +40,12 @@ class BusinessParent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['city_id', 'name', 'latitude', 'longitude', 'logo', 'google_page_link', 'address', 'email', 'phone'], 'required'],
+            [['city_id', 'name', 'latitude', 'longitude', 'logo', 'google_page_url', 'address', 'email', 'phone'], 'required'],
             [['city_id', 'favourite'], 'integer'],
             [['latitude', 'longitude'], 'number'],
             [['description'], 'string'],
             [['opening_hour', 'closing_hour'], 'safe'],
-            [['name', 'logo', 'google_page_link', 'address', 'email', 'phone', 'reviews', 'program'], 'string', 'max' => 255],
+            [['name', 'logo', 'google_page_url', 'address', 'email', 'phone', 'reviews', 'program'], 'string', 'max' => 255],
         ];
     }
 
@@ -61,7 +61,7 @@ class BusinessParent extends \yii\db\ActiveRecord
             'latitude' => 'Latitude',
             'longitude' => 'Longitude',
             'logo' => 'Logo',
-            'google_page_link' => 'Google Page Link',
+            'google_page_url' => 'Google Page Url',
             'address' => 'Address',
             'email' => 'Email',
             'phone' => 'Phone',

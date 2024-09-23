@@ -1,15 +1,20 @@
-CREATE TABLE IF NOT EXISTS `business` (
-`id` INT AUTO_INCREMENT PRIMARY KEY,
-`city_id` INT NOT NULL,
-`name` VARCHAR(255) NOT NULL,
-`latitude` DECIMAL(9,6) NOT NULL,
-`longitude` DECIMAL(9,6) NOT NULL,
-`logo` VARCHAR(255) NOT NULL,
-`google_page_link` VARCHAR(255) NOT NULL,
-`address` VARCHAR(255) NOT NULL,
-`email` VARCHAR(255) NOT NULL,
-`phone` VARCHAR(255) NOT NULL
-`reviews` VARCHAR(255) NULL,
-`favourite` TINYINT NOT NULL DEFAULT '0',
-`description` LONGTEXT NOT NULL,
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE business (
+id INT PRIMARY KEY,
+city_id INT,
+name VARCHAR(255),
+latitude DECIMAL(10, 7),
+longitude DECIMAL(10, 7),
+logo VARCHAR(255),
+google_page_url VARCHAR(255),
+rating DECIMAL(2, 1),
+address TEXT,
+email VARCHAR(255),
+phone VARCHAR(255),
+reviews LONGTEXT,
+favourite BOOLEAN,
+description TEXT,
+program TEXT,
+opening_hour VARCHAR(5),
+closing_hour VARCHAR(5),
+FOREIGN KEY (city_id) REFERENCES cities(id)
+);
