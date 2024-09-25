@@ -8,22 +8,16 @@ use yii\web\Controller;
 
 class ApiCityController extends Controller
 {
-    public function behaviors()
+    public function beforeAction($action)
     {
-        $behaviors = parent::behaviors();
+        if (\Yii::$app->getRequest()->getMethod() === 'OPTIONS') {
+            \Yii::$app->getResponse()->getHeaders()->set('Access-Control-Allow-Origin', '*');
+            \Yii::$app->getResponse()->getHeaders()->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+            \Yii::$app->getResponse()->getHeaders()->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+            \Yii::$app->end();
+        }
 
-        // Adaugă comportamentul CORS
-        $behaviors['corsFilter'] = [
-            'class' => \yii\filters\Cors::class,
-            'cors' => [
-                'Origin' => ['*'], // Permite toate originile pentru dezvoltare
-                'Access-Control-Allow-Credentials' => false, // Setează la false dacă folosești Origin '*'
-                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-                'Access-Control-Allow-Headers' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
-            ],
-        ];
-
-        return $behaviors;
+        return parent::beforeAction($action);
     }
 
     public function actionIndex()

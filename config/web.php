@@ -24,9 +24,9 @@ $config = [
             'format' => yii\web\Response::FORMAT_JSON,
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $response->headers->set('Access-Control-Allow-Origin', '*'); // Sau 'http://localhost'
+                $response->headers->set('Access-Control-Allow-Origin', '*'); // Sau specifică 'http://localhost'
                 $response->headers->set('Access-Control-Allow-Credentials', 'false');
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
                 $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
                 $response->headers->set('Vary', 'Origin');
             },
@@ -61,7 +61,9 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['api-city', 'api-business']],
+                // Adaugă o regulă pentru metode OPTIONS, dacă vrei să controlezi asta explicit
+                'OPTIONS api/<controller:\w+>' => 'api/<controller>/options',
+                ['class' => 'yii\rest\UrlRule', 'controller' => ['api-city', 'api-business', 'user']],
             ],
         ],
     ],
@@ -69,10 +71,11 @@ $config = [
     'as corsFilter' => [
         'class' => \yii\filters\Cors::class,
         'cors' => [
-            'Origin' => ['*'], // Adaugă localhost și IP local
+            'Origin' => ['*'], // Permite toate originile (ajustează pentru producție)
             'Access-Control-Allow-Credentials' => false,
             'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
             'Access-Control-Allow-Headers' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
+            'Access-Control-Max-Age' => 3600, // Cachează răspunsurile preflight pentru o oră
         ],
     ],
 ];
