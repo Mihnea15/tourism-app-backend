@@ -71,6 +71,8 @@ class UserController extends Controller
             'status' => 'success',
             'message' => 'User registered successfully.',
             'user_id' => $user->id,
+            'username' => $user->first_name . ' ' . $user->last_name,
+            'email' => $user->email,
         ];
     }
 
@@ -93,6 +95,8 @@ class UserController extends Controller
                 'status' => 'success',
                 'message' => 'User logged in successfully.',
                 'user_id' => $user->id,
+                'username' => $user->first_name . ' ' . $user->last_name,
+                'email' => $user->email,
             ];
         } else {
             \Yii::$app->response->statusCode = 400;
