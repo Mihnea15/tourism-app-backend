@@ -8,17 +8,18 @@ use Yii;
  * This is the model class for table "business".
  *
  * @property int $id
- * @property int $city_id
- * @property string $name
- * @property float $latitude
- * @property float $longitude
- * @property string $logo
- * @property string $google_page_url
- * @property string $address
- * @property string $email
- * @property string $phone
+ * @property int|null $city_id
+ * @property string|null $name
+ * @property float|null $latitude
+ * @property float|null $longitude
+ * @property string|null $logo
+ * @property string|null $google_page_url
+ * @property float|null $rating
+ * @property string|null $address
+ * @property string|null $email
+ * @property string|null $phone
  * @property string|null $reviews
- * @property int $favourite
+ * @property int|null $favourite
  * @property string|null $description
  * @property string|null $program
  * @property string|null $opening_hour
@@ -40,12 +41,13 @@ class BusinessParent extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['city_id', 'name', 'latitude', 'longitude', 'logo', 'google_page_url', 'address', 'email', 'phone'], 'required'],
-            [['city_id', 'favourite'], 'integer'],
-            [['latitude', 'longitude'], 'number'],
-            [['description'], 'string'],
-            [['opening_hour', 'closing_hour'], 'safe'],
-            [['name', 'logo', 'google_page_url', 'address', 'email', 'phone', 'reviews', 'program'], 'string', 'max' => 255],
+            [['id'], 'required'],
+            [['id', 'city_id', 'favourite'], 'integer'],
+            [['latitude', 'longitude', 'rating'], 'number'],
+            [['address', 'reviews', 'description', 'program'], 'string'],
+            [['name', 'logo', 'google_page_url', 'email', 'phone'], 'string', 'max' => 255],
+            [['opening_hour', 'closing_hour'], 'string', 'max' => 5],
+            [['id'], 'unique'],
         ];
     }
 
@@ -62,6 +64,7 @@ class BusinessParent extends \yii\db\ActiveRecord
             'longitude' => 'Longitude',
             'logo' => 'Logo',
             'google_page_url' => 'Google Page Url',
+            'rating' => 'Rating',
             'address' => 'Address',
             'email' => 'Email',
             'phone' => 'Phone',

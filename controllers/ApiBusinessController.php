@@ -33,7 +33,10 @@ class ApiBusinessController extends Controller
         $favourites = Favourite::find()->asArray()->all();
         return [
             'favourites' => $favourites,
-            'business' => Business::find()->asArray()->all(),
+            'business' => Business::find()
+                ->with('images') // Include relația 'images'
+                ->asArray()
+                ->all(),
         ];
     }
 
@@ -57,6 +60,7 @@ class ApiBusinessController extends Controller
             ];
         }
 
+        $msg = 'removed';
         $checkFavourite = Favourite::find()->where(['business_id' => $post['business_id'], 'user_id' => $post['user_id']])->one();
         if (empty($checkFavourite)) {
             $favourite = new Favourite();
@@ -73,9 +77,21 @@ class ApiBusinessController extends Controller
                     }
                 }
             }
+
+            $business->favourite = 1;
+            $business->save();
+
+            $msg = 'added';
         } else {
             $checkFavourite->delete();
+            $business->favourite = 0;
+            $business->save();
         }
+
+        return [
+            'status' => 'success',
+            'message' => 'Favourite ' . $msg . ' successfully.',
+        ];
     }
 
     public function actionGetFavourites($userId)

@@ -13,6 +13,7 @@ use Yii;
  * @property string $email
  * @property string $password_hash
  * @property int $status 0 - inactive; 1 - active
+ * @property string|null $profile_picture
  */
 class UserParent extends \yii\db\ActiveRecord
 {
@@ -33,7 +34,7 @@ class UserParent extends \yii\db\ActiveRecord
             [['first_name', 'last_name', 'email', 'password_hash'], 'required'],
             [['password_hash'], 'string'],
             [['status'], 'integer'],
-            [['first_name', 'last_name', 'email'], 'string', 'max' => 255],
+            [['first_name', 'last_name', 'email', 'profile_picture'], 'string', 'max' => 255],
         ];
     }
 
@@ -49,6 +50,7 @@ class UserParent extends \yii\db\ActiveRecord
             'email' => 'Email',
             'password_hash' => 'Password Hash',
             'status' => 'Status',
+            'profile_picture' => 'Profile Picture',
         ];
     }
 }
