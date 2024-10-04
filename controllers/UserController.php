@@ -3,8 +3,6 @@
 namespace app\controllers;
 
 use app\models\User;
-use Codeception\PHPUnit\Constraint\Page;
-use yii\filters\Cors;
 use yii\web\Controller;
 
 class UserController extends Controller
@@ -103,6 +101,68 @@ class UserController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Invalid email or password.',
+            ];
+        }
+    }
+
+    public function actionGetUserData($userId)
+    {
+        return User::find()->where(['id' => $userId])->asArray()->one();
+    }
+
+    public function actionUploadUserPhoto()
+    {
+        $userId = \Yii::$app->request->post('user_id'); // Preia ID-ul utilizatorului
+        $uploadDir = '../css/images/' . $userId;
+
+        // Verifică dacă fișierul a fost încărcat și dacă directorul poate fi creat
+        if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            // Creează directorul dacă nu există
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $fileName = basename($_FILES['image']['name']);
+            $uploadFile = $uploadDir . '/' . $fileName;
+
+            // Mută fișierul încărcat în directorul dorit
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                $user = User::find()->where(['id' => $userId])->one();
+                if (!empty($user)) {
+                    $user->profile_picture = $uploadFile;
+                    if (!$user->save()) {
+                        if ($user->hasErrors()) {
+                            foreach ($user->errors as $error) {
+                                return [
+                                    'status' => 'error',
+                                    'message' => $error[0],
+                                ];
+                            }
+                        }
+                        return [
+                            'status' => 'error',
+                            'message' => 'Could not save user photo.',
+                        ];
+                    }
+                }
+
+                \Yii::$app->response->statusCode = 200;
+                return [
+                    'status' => 'success',
+                    'message' => 'Fișierul a fost încărcat cu succes!',
+                ];
+            } else {
+                \Yii::$app->response->statusCode = 400;
+                return [
+                    'status' => 'error',
+                    'message' => 'Eroare la mutarea fișierului.',
+                ];
+            }
+        } else {
+            \Yii::$app->response->statusCode = 400;
+            return [
+                'status' => 'error',
+                'message' => 'Niciun fișier încărcat sau eroare la încărcare.',
             ];
         }
     }
