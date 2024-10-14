@@ -107,7 +107,32 @@ class UserController extends Controller
 
     public function actionGetUserData($userId)
     {
-        return User::find()->where(['id' => $userId])->asArray()->one();
+        $model = User::find()->where(['id' => $userId])->one();
+        if (empty($model)) {
+            \Yii::$app->response->statusCode = 400;
+            return [
+                'status' => 'error',
+                'message' => 'User not found.',
+            ];
+        }
+
+        if (empty($model->profile_picture)) {
+            return User::find()->where(['id' => $userId])->asArray()->one();
+        }
+
+        // Verifică dacă fișierul există
+        if (file_exists($model->profile_picture)) {
+            $type = pathinfo($model->profile_picture, PATHINFO_EXTENSION);
+            $data = file_get_contents($model->profile_picture);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+
+            $model->profile_picture = $base64;
+        } else {
+            // Afișează un mesaj de eroare pentru debugging
+            $model->profile_picture = null;
+        }
+
+        return $model;
     }
 
     public function actionUploadUserPhoto()
@@ -163,6 +188,50 @@ class UserController extends Controller
             return [
                 'status' => 'error',
                 'message' => 'Niciun fișier încărcat sau eroare la încărcare.',
+            ];
+        }
+    }
+
+    public function actionUpdatePassword()
+    {
+        $post = \Yii::$app->request->post();
+
+        $userModel = User::find()->where(['id' => $post['user_id']])->one();
+        if (empty($userModel)) {
+            \Yii::$app->response->statusCode = 400;
+            return [
+                'status' => 'error',
+                'message' => 'User not found.',
+            ];
+        }
+
+        if (\Yii::$app->security->validatePassword($post['old_password'], $userModel->password_hash)) {
+            $userModel->password_hash = \Yii::$app->security->generatePasswordHash($post['new_password']);
+            if (!$userModel->save()) {
+                if ($userModel->hasErrors()) {
+                    foreach ($userModel->errors as $error) {
+                        return [
+                            'status' => 'error',
+                            'message' => $error[0],
+                        ];
+                    }
+                }
+                return [
+                    'status' => 'error',
+                    'message' => 'Could not update password.',
+                ];
+            }
+
+            \Yii::$app->response->statusCode = 200;
+            return [
+                'status' => 'success',
+                'message' => 'Password updated successfully.',
+            ];
+        } else {
+            \Yii::$app->response->statusCode = 400;
+            return [
+                'status' => 'error',
+                'message' => 'Invalid old password.',
             ];
         }
     }
