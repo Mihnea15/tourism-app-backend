@@ -2,13 +2,8 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=tourism_app',
-    'username' => 'root',
-    'password' => 'MovonUcec5',
+    'dsn' => 'mysql:host=sql109.infinityfree.com;dbname=if0_37508792_tourism_app',  // Hostname-ul și numele bazei de date
+    'username' => 'if0_37508792',  // Utilizatorul bazei de date
+    'password' => 'GtCG814LOWg',  // Parola asociată utilizatorului bazei de date
     'charset' => 'utf8',
-
-    // Schema cache options (for production environment)
-    //'enableSchemaCache' => true,
-    //'schemaCacheDuration' => 60,
-    //'schemaCache' => 'cache',
 ];

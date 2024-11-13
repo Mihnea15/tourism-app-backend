@@ -7,22 +7,6 @@ use yii\web\Controller;
 
 class UserController extends Controller
 {
-    public function beforeAction($action)
-    {
-        $headers = \Yii::$app->getResponse()->getHeaders();
-
-        // Setează header-urile CORS
-        $headers->set('Access-Control-Allow-Origin', '*'); // Sau specifică 'http://localhost'
-        $headers->set('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-        $headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-
-        if (\Yii::$app->getRequest()->getMethod() === 'OPTIONS') {
-            \Yii::$app->end();
-        }
-
-        return parent::beforeAction($action);
-    }
-
     public function actionRegister()
     {
         $post = \Yii::$app->request->post();

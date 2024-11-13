@@ -21,14 +21,12 @@ $config = [
         ],
         'response' => [
             'class' => 'yii\web\Response',
-            'format' => yii\web\Response::FORMAT_JSON,
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $response->headers->set('Access-Control-Allow-Origin', '*'); // Sau specifică 'http://localhost'
-                $response->headers->set('Access-Control-Allow-Credentials', 'false');
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-                $response->headers->set('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, Authorization, X-Requested-With');
-                $response->headers->set('Vary', 'Origin');
+                $headers = $response->headers;
+                $headers->set('Access-Control-Allow-Origin', '*');
+                $headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                $headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
             },
         ],
         'cache' => [
@@ -51,7 +49,7 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                 ],
             ],
         ],
@@ -61,8 +59,9 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
-                // Adaugă o regulă pentru metode OPTIONS, dacă vrei să controlezi asta explicit
+                // Regula pentru metode OPTIONS
                 'OPTIONS api/<controller:\w+>' => 'api/<controller>/options',
+                // Reguli REST pentru controllerele specificate
                 ['class' => 'yii\rest\UrlRule', 'controller' => ['api-city', 'api-business', 'user']],
             ],
         ],
@@ -71,11 +70,12 @@ $config = [
     'as corsFilter' => [
         'class' => \yii\filters\Cors::class,
         'cors' => [
-            'Origin' => ['*'], // Permite toate originile (ajustează pentru producție)
-            'Access-Control-Allow-Credentials' => false,
-            'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-            'Access-Control-Allow-Headers' => ['Origin', 'Content-Type', 'Accept', 'Authorization', 'X-Requested-With'],
-            'Access-Control-Max-Age' => 3600, // Cachează răspunsurile preflight pentru o oră
+            'Origin' => ['*'],  // Schimbă '*' cu domeniul tău, dacă este necesar
+            'Access-Control-Request-Method' => ['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT'],
+            'Access-Control-Allow-Credentials' => true,
+            'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization', 'X-Requested-With'],
+            'Access-Control-Max-Age' => 3600,
+            'Access-Control-Expose-Headers' => [],
         ],
     ],
 ];

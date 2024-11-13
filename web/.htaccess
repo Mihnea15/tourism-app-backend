@@ -1,4 +1,6 @@
 RewriteEngine on
-RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rescriere URL-uri pentru a folosi index.php
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule . index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . index.php
