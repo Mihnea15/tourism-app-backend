@@ -23,7 +23,7 @@ class ApiCityController extends Controller
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
         return [
-            'cities' => City::find()->asArray()->all(),
+            'cities' => City::find()->asArray()->orderBy(['id' => SORT_ASC])->all(),
             'business' => Business::find()->asArray()->all(),
             'trails' => Trails::find()->asArray()->all(),
         ];
