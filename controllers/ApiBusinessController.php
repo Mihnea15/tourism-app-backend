@@ -5,9 +5,19 @@ namespace app\controllers;
 use app\models\Business;
 use app\models\Favourite;
 use yii\web\Controller;
-
+use yii\filters\Cors;
 class ApiBusinessController extends Controller
 {
+    // Handle OPTIONS requests
+    public function actions()
+    {
+        return [
+            'options' => [
+                'class' => 'yii\rest\OptionsAction',
+            ],
+        ];
+    }
+
     public function actionIndex()
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;

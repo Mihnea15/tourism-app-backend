@@ -7,34 +7,44 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'aliases' => [
-        '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
-    ],
     'components' => [
         'request' => [
-            'cookieValidationKey' => '03A4iytCYkwKxm4HxZSmA0h08tM0iCsa',
+            'enableCookieValidation' => false,
+            'enableCsrfValidation' => false,
             'parsers' => [
+
+                // Info: The above configuration is optional.
+                // Without the above configuration, the API would only recognize
+                // application/x-www-form-urlencoded and multipart/form-data input formats.
                 'application/json' => 'yii\web\JsonParser',
             ],
-            'enableCsrfValidation' => false, // Disable CSRF for API requests
+        ],
+        'user' => [
+            'identityClass' => 'api\models\User',
+            'enableSession' => false,
+//            'enableAutoLogin' => true,
+//            'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
         ],
         'response' => [
+            'format' => yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $headers = $response->headers;
-                $headers->set('Access-Control-Allow-Origin', '*');
-                $headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-                $headers->set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
+                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+                $response->headers->set('Access-Control-Max-Age', '3600');
+                if ($response->data !== null && $response->statusCode !== 204) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'data' => $response->data,
+                    ];
+                }
             },
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
-        ],
-        'user' => [
-            'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -56,42 +66,28 @@ $config = [
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
-            'enableStrictParsing' => false,
             'rules' => [
-                // Regula pentru metode OPTIONS
-                'OPTIONS api/<controller:\w+>' => 'api/<controller>/options',
-                // Reguli REST pentru controllerele specificate
-                ['class' => 'yii\rest\UrlRule', 'controller' => ['api-city', 'api-business', 'user']],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api-city', 'api-business', 'user'],
+                    'pluralize' => false,
+                    'extraPatterns' => [
+                        'OPTIONS <action>' => 'options',
+                        'GET get-favourites' => 'get-favourites',
+                        'POST add-favourite' => 'add-favourite',
+                        'GET get-user-data' => 'get-user-data',
+                        'POST register' => 'register',
+                        'POST login' => 'login',
+                        'POST upload-user-photo' => 'upload-user-photo',
+                        'POST update-password' => 'update-password',
+                    ],
+                ],
             ],
         ],
     ],
     'params' => $params,
-    'as corsFilter' => [
-        'class' => \yii\filters\Cors::class,
-        'cors' => [
-            'Origin' => ['*'],  // Schimbă '*' cu domeniul tău, dacă este necesar
-            'Access-Control-Request-Method' => ['GET', 'POST', 'OPTIONS', 'DELETE', 'PUT'],
-            'Access-Control-Allow-Credentials' => true,
-            'Access-Control-Allow-Headers' => ['Content-Type', 'Authorization', 'X-Requested-With'],
-            'Access-Control-Max-Age' => 3600,
-            'Access-Control-Expose-Headers' => [],
-        ],
-    ],
 ];
-
-if (YII_ENV_DEV) {
-    $config['bootstrap'][] = 'debug';
-    $config['modules']['debug'] = [
-        'class' => 'yii\debug\Module',
-        'allowedIPs' => ['127.0.0.1', '::1'],
-    ];
-
-    $config['bootstrap'][] = 'gii';
-    $config['modules']['gii'] = [
-        'class' => 'yii\gii\Module',
-        'allowedIPs' => ['127.0.0.1', '::1'],
-    ];
-}
 
 return $config;

@@ -4,9 +4,19 @@ namespace app\controllers;
 
 use app\models\User;
 use yii\web\Controller;
-
+use yii\filters\Cors;
 class UserController extends Controller
 {
+    // Handle OPTIONS requests
+    public function actions()
+    {
+        return [
+            'options' => [
+                'class' => 'yii\rest\OptionsAction',
+            ],
+        ];
+    }
+
     public function actionRegister()
     {
         $post = \Yii::$app->request->post();
