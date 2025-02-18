@@ -8,7 +8,6 @@ use yii\web\Controller;
 use yii\filters\Cors;
 class ApiBusinessController extends Controller
 {
-    // Handle OPTIONS requests
     public function actions()
     {
         return [
@@ -26,7 +25,7 @@ class ApiBusinessController extends Controller
         return [
             'favourites' => $favourites,
             'business' => Business::find()
-                ->with('images') // Include relația 'images'
+                ->with('images')
                 ->asArray()
                 ->all(),
         ];

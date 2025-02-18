@@ -7,7 +7,6 @@ use yii\web\Controller;
 use yii\filters\Cors;
 class UserController extends Controller
 {
-    // Handle OPTIONS requests
     public function actions()
     {
         return [
@@ -114,7 +113,6 @@ class UserController extends Controller
             return User::find()->where(['id' => $userId])->asArray()->one();
         }
 
-        // Verifică dacă fișierul există
         if (file_exists($model->profile_picture)) {
             $type = pathinfo($model->profile_picture, PATHINFO_EXTENSION);
             $data = file_get_contents($model->profile_picture);
@@ -122,7 +120,6 @@ class UserController extends Controller
 
             $model->profile_picture = $base64;
         } else {
-            // Afișează un mesaj de eroare pentru debugging
             $model->profile_picture = null;
         }
 
@@ -131,12 +128,10 @@ class UserController extends Controller
 
     public function actionUploadUserPhoto()
     {
-        $userId = \Yii::$app->request->post('user_id'); // Preia ID-ul utilizatorului
+        $userId = \Yii::$app->request->post('user_id');
         $uploadDir = '../css/images/' . $userId;
 
-        // Verifică dacă fișierul a fost încărcat și dacă directorul poate fi creat
         if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            // Creează directorul dacă nu există
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
@@ -144,7 +139,6 @@ class UserController extends Controller
             $fileName = basename($_FILES['image']['name']);
             $uploadFile = $uploadDir . '/' . $fileName;
 
-            // Mută fișierul încărcat în directorul dorit
             if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
                 $user = User::find()->where(['id' => $userId])->one();
                 if (!empty($user)) {
