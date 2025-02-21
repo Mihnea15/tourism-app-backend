@@ -61,7 +61,3 @@ Accesează API-ul la `http://localhost:3000` sau `http://<IP-ul_tău>:3000` de p
 ## Configurare CORS
 
 Asigură-te că ai configurat CORS corect în `config/web.php` pentru a permite accesul din aplicația mobilă.
-
-## Contribuții
-
-Contribuțiile sunt binevenite! Te rog să deschizi un issue sau un pull request pentru a discuta despre modificările dorite.
