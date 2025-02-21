@@ -65,7 +65,3 @@ Asigură-te că ai configurat CORS corect în `config/web.php` pentru a permite 
 ## Contribuții
 
 Contribuțiile sunt binevenite! Te rog să deschizi un issue sau un pull request pentru a discuta despre modificările dorite.
-
-## Licență
-
-Acest proiect este licențiat sub [Licența MIT](LICENSE).
