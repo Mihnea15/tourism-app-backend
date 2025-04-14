@@ -31,15 +31,30 @@ $config = [
             'class' => 'yii\web\Response',
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
-                $response->headers->set('Access-Control-Allow-Origin', '*');
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-                $response->headers->set('Access-Control-Max-Age', '3600');
-                if ($response->data !== null && $response->statusCode !== 204) {
-                    $response->data = [
-                        'success' => $response->isSuccessful,
-                        'data' => $response->data,
-                    ];
+                if ($response->format == \yii\web\Response::FORMAT_JSON) {
+                    // Setăm headerele CORS
+                    $response->headers->set('Access-Control-Allow-Origin', '*');
+                    $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+                    $response->headers->set('Access-Control-Allow-Headers', '*');
+                    $response->headers->set('Access-Control-Allow-Credentials', 'true');
+
+                    // Formatăm răspunsul pentru a se potrivi cu ce așteaptă frontend-ul
+                    if ($response->data !== null && !$response->isSuccessful) {
+                        $response->data = [
+                            'success' => false,
+                            'data' => $response->data
+                        ];
+                    } else {
+                        $response->data = [
+                            'success' => true,
+                            'data' => $response->data
+                        ];
+                    }
+                }
+                if (Yii::$app->request->isOptions) {
+                    $response->statusCode = 204;
+                    $response->data = null;
+                    return false;
                 }
             },
         ],

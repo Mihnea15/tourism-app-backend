@@ -22,6 +22,8 @@ class ApiCityController extends Controller
     public function actionIndex()
     {
         \Yii::$app->response->format = Response::FORMAT_JSON;
+        header('Access-Control-Allow-Origin: *');
+        
         return [
             'cities' => City::find()->asArray()->orderBy(['id' => SORT_ASC])->all(),
             'business' => Business::find()->asArray()->all(),
