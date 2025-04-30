@@ -33,7 +33,7 @@ class UserParent extends \yii\db\ActiveRecord
         return [
             [['first_name', 'last_name', 'email', 'password_hash'], 'required'],
             [['password_hash'], 'string'],
-            [['status'], 'integer'],
+            [['status', 'favourites'], 'integer'],
             [['first_name', 'last_name', 'email', 'profile_picture'], 'string', 'max' => 255],
         ];
     }

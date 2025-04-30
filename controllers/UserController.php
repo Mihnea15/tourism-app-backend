@@ -3,8 +3,10 @@
 namespace app\controllers;
 
 use app\models\User;
+use app\models\Favourite;
 use yii\web\Controller;
 use yii\filters\Cors;
+
 class UserController extends Controller
 {
     public function actions()
@@ -109,9 +111,8 @@ class UserController extends Controller
             ];
         }
 
-        if (empty($model->profile_picture)) {
-            return User::find()->where(['id' => $userId])->asArray()->one();
-        }
+        $favourites = Favourite::find()->where(['user_id' => $userId])->all();
+        $model->favourites = $favourites;
 
         if (file_exists($model->profile_picture)) {
             $type = pathinfo($model->profile_picture, PATHINFO_EXTENSION);
@@ -123,7 +124,10 @@ class UserController extends Controller
             $model->profile_picture = null;
         }
 
-        return $model;
+        return [
+            'user' => $model,
+            'favourites' => $favourites,
+        ];
     }
 
     public function actionUploadUserPhoto()

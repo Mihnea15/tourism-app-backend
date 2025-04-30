@@ -4,6 +4,8 @@ namespace app\models;
 
 class User extends UserParent
 {
+
+    public $favourites;
     /**
      * {@inheritdoc}
      */
