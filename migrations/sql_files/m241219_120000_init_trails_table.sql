@@ -1,0 +1,22 @@
+CREATE TABLE `trails` (
+    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `description` text COLLATE utf8mb4_unicode_ci,
+    `difficulty` enum('easy','medium','hard') COLLATE utf8mb4_unicode_ci NOT NULL,
+    `length_km` decimal(12,2) DEFAULT NULL,
+    `elevation_gain` int(11) DEFAULT NULL,
+    `estimated_time` int(11) DEFAULT NULL,
+    `start_point_lat` decimal(10,7) NOT NULL,
+    `start_point_lng` decimal(10,7) NOT NULL,
+    `end_point_lat` decimal(10,7) NOT NULL,
+    `end_point_lng` decimal(10,7) NOT NULL,
+    `coordinates` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+    `city_id` int(11) DEFAULT NULL,
+    `region` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `trail_type` enum('hiking','biking','mixed') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `season` enum('summer','winter','all') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `markers` longtext COLLATE utf8mb4_unicode_ci,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`city_id`) REFERENCES `city`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci; 

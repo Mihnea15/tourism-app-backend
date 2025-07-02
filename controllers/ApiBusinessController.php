@@ -6,6 +6,7 @@ use app\models\Business;
 use app\models\Favourite;
 use yii\web\Controller;
 use yii\filters\Cors;
+
 class ApiBusinessController extends Controller
 {
     public function actions()
@@ -13,6 +14,27 @@ class ApiBusinessController extends Controller
         return [
             'options' => [
                 'class' => 'yii\rest\OptionsAction',
+            ],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => \yii\filters\AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['index', 'view'],
+                        'allow' => true,
+                        'roles' => ['?'], // Permite accesul oaspeților
+                    ],
+                    [
+                        'actions' => ['create', 'update'],
+                        'allow' => true,
+                        'roles' => ['@'], // Doar utilizatori autentificați
+                    ],
+                ],
             ],
         ];
     }

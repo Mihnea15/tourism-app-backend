@@ -29,6 +29,8 @@ class UserController extends Controller
             ];
         }
 
+        $userName = $post['username'];
+
         $checkEmail = User::find()->where(['email' => $post['email']])->one();
         if (!empty($checkEmail)) {
             \Yii::$app->response->statusCode = 400;
@@ -39,8 +41,8 @@ class UserController extends Controller
         }
 
         $user = new User();
-        $user->first_name = trim($post['first_name']);
-        $user->last_name = trim($post['last_name']);
+        $user->first_name = explode(' ', $userName)[0];
+        $user->last_name = explode(' ', $userName)[1];
         $user->email = trim($post['email']);
         $user->password_hash = \Yii::$app->security->generatePasswordHash($post['password']);
         if (!$user->save()) {
