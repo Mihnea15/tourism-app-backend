@@ -116,7 +116,7 @@ class UserController extends Controller
         $favourites = Favourite::find()->where(['user_id' => $userId])->all();
         $model->favourites = $favourites;
 
-        if (file_exists($model->profile_picture)) {
+        if (!empty($model->profile_picture) && file_exists($model->profile_picture)) {
             $type = pathinfo($model->profile_picture, PATHINFO_EXTENSION);
             $data = file_get_contents($model->profile_picture);
             $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
